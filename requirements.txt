@@ -1,0 +1,6 @@
+faiss-gpu
+termcolor
+pandas
+mat4py
+ftfy
+python3-distutils

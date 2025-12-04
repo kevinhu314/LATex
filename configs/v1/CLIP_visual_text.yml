@@ -1,0 +1,107 @@
+
+MODEL:
+  META_ARCHITECTURE: Baseline_clip_visual_text
+  PIXEL_MEAN: [ 127.485, 127.456, 127.406 ]
+  PIXEL_STD: [ 127.229, 127.224, 127.225 ]
+
+
+  BACKBONE:
+    NAME: build_clip_prompt
+
+    DEPTH: base
+    FEAT_DIM: 512
+
+    PRETRAIN: True
+    PRETRAIN_PATH: "/path/to/ViT-B-16.pt"
+
+    STRIDE_SIZE: (16, 16)
+    DROP_PATH_RATIO: 0.1
+    DROP_RATIO: 0.0
+    ATT_DROP_RATE: 0.0
+    SIE_COE : 0.0
+
+  HEADS:
+    NAME: EmbeddingHead
+    NORM: BN
+    WITH_BNNECK: True
+    POOL_LAYER: Identity
+    NECK_FEAT: before
+    CLS_LAYER: Linear
+
+  LOSSES:
+    NAME: ("CrossEntropyLoss", "TripletLoss",)
+
+    CE:
+      EPSILON: 0.
+      SCALE: 0.25
+      VIEW_ID: True
+      VIEW_LAMBDA: 0.001
+
+    TRI:
+      MARGIN: 0.0
+      HARD_MINING: True
+      NORM_FEAT: False
+      SCALE: 1.
+
+    ATTRCE:
+      SCALE: 1.
+      EPS: 0.1
+
+
+INPUT:
+  SIZE_TRAIN: [ 256, 128 ]
+  SIZE_TEST: [ 256, 128 ]
+
+  REA:
+    ENABLED: True
+    PROB: 0.5
+
+  FLIP:
+    ENABLED: True
+
+  PADDING:
+    ENABLED: True
+
+DATALOADER:
+  SAMPLER_TRAIN: NaiveIdentitySampler
+
+  NUM_INSTANCE: 8
+  NUM_WORKERS: 8
+
+SOLVER:
+  AMP:
+    ENABLED: True
+  OPT: Adam
+
+  MAX_EPOCH: 120
+
+  BASE_LR: 0.00035
+
+
+
+  WEIGHT_DECAY: 0.0001
+  IMS_PER_BATCH: 128
+
+  SCHED: CosineAnnealingLR
+  ETA_MIN_LR: 0.0000016
+
+  WARMUP_FACTOR: 0.01
+  WARMUP_ITERS: 2000
+
+  CLIP_GRADIENTS:
+    ENABLED: True
+
+  CHECKPOINT_PERIOD: 5
+
+TEST:
+  EVAL_PERIOD: 5
+
+  IMS_PER_BATCH:  1024
+
+CUDNN_BENCHMARK: True
+
+DATASETS:
+  NAMES: ('AG_ReID_v1',)
+  TESTS: ('AG_ReID_v1_AG','AG_ReID_v1_GA',)
+
+OUTPUT_DIR: output_path
