@@ -20,9 +20,6 @@ To address these issues, we propose **LATex**, a novel framework that adopts **p
 
 Our framework achieves state-of-the-art performance on AG-ReID benchmarks while significantly reducing trainable parameters compared to full fine-tuning methods.
 
-![Framework](assets/overall.pdf)
-*(Figure 2 from the paper: The illustration of the proposed LATex framework.)*
-
 ## ✨ Highlights
 
 * **Attribute Consistency:** We leverage the insight that person attributes remain consistent across drastic aerial-ground viewpoint changes, unlike visual body part distributions.
